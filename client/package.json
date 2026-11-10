@@ -1,0 +1,37 @@
+{
+  "name": "ebookstore-client",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^7.0.5",
+    "axios": "^1.21.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.91.0",
+    "react-router-dom": "^7.18.5",
+    "yup": "^1.7.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.13",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "@tailwindcss/vite": "^4.3.5",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.9",
+    "@types/react": "^18.3.31",
+    "@vitejs/plugin-react": "^6.3.0",
+    "babel-jest": "^30.5.2",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.7"
+  }
+}

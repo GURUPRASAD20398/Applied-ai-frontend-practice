@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #dbeafe;
+  --color-secondary: #1e293b;
+  --color-accent: #f59e0b;
+  --color-accent-dark: #d97706;
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-serif: Georgia, 'Times New Roman', serif;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+  img {
+    @apply max-w-full;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-primary text-white hover:bg-primary-dark;
+  }
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-accent text-slate-900 hover:bg-accent-dark hover:text-white;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 border border-slate-300 bg-white text-slate-700 hover:bg-slate-100;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-red-600 text-white hover:bg-red-700;
+  }
+  .input {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30;
+  }
+  .input-error {
+    @apply border-red-500 focus:border-red-500 focus:ring-red-500/30;
+  }
+  .card {
+    @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+  }
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
+
+.sr-only-focusable:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
