@@ -1,0 +1,13 @@
+{
+  "name": "ebookstore",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full stack E-Bookstore platform (React + Express + JSON mock DB)",
+  "workspaces": ["server", "client"],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:client": "npm run dev -w client",
+    "test": "npm run test -w server && npm run test -w client",
+    "build": "npm run build -w client"
+  }
+}
