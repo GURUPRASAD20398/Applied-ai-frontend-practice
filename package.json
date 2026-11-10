@@ -8,6 +8,8 @@
     "dev:server": "npm run dev -w server",
     "dev:client": "npm run dev -w client",
     "test": "npm run test -w server && npm run test -w client",
+    "seed": "npm run seed -w server",
+    "smoke": "node scripts/smoke-test.mjs",
     "build": "npm run build -w client"
   }
 }
