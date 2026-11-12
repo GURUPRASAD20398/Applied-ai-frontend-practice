@@ -42,7 +42,7 @@ export default function AddressForm({ initial, onSubmit, onCancel, serverErrors 
           </div>
         );
       })}
-      <label className="flex items-center gap-2 text-sm sm:col-span-2">
+      <label className="flex items-center gap-2 text-sm text-ink sm:col-span-2">
         <input type="checkbox" className="h-4 w-4 accent-primary" {...register('isDefault')} />
         Make this my default address
       </label>

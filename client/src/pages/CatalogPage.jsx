@@ -3,9 +3,10 @@ import { useSearchParams } from 'react-router-dom';
 import { bookService } from '../services';
 import useDebounce from '../hooks/useDebounce';
 import BookGrid from '../components/books/BookGrid';
-import FilterSidebar from '../components/books/FilterSidebar';
+import FilterSidebar, { FilterBarFields } from '../components/books/FilterSidebar';
 import Pagination from '../components/common/Pagination';
 import Loader from '../components/common/Loader';
+import { SearchIcon } from '../components/common/Icons';
 
 const PAGE_SIZE = 12;
 const SORTS = [
@@ -99,56 +100,62 @@ export default function CatalogPage() {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-secondary">Browse books</h1>
-
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="flex-1">
-          <label htmlFor="catalog-search" className="sr-only">
-            Search the catalog
-          </label>
-          <input
-            id="catalog-search"
-            type="search"
-            className="input"
-            placeholder="Search by title, author, publisher or ISBN"
-            value={term}
-            maxLength={100}
-            onChange={(e) => setTerm(e.target.value)}
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <label htmlFor="sort" className="text-sm text-slate-600">
-            Sort by
-          </label>
-          <select id="sort" className="input w-auto" value={sort} onChange={(e) => update({ sort: e.target.value })}>
-            {SORTS.map(([v, l]) => (
-              <option key={v} value={v}>
-                {l}
-              </option>
-            ))}
-          </select>
-          <button type="button" className="btn-outline lg:hidden" aria-expanded={showFilters} onClick={() => setShowFilters((s) => !s)}>
-            Filters
-          </button>
-        </div>
+    <div className="grid gap-6 lg:grid-cols-[190px_1fr] lg:gap-8">
+      <div className={`${showFilters ? 'block' : 'hidden'} order-2 lg:order-none lg:block`}>
+        {facets && <FilterSidebar facets={facets} filters={filters} onChange={update} onReset={reset} />}
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[260px_1fr]">
-        <div className={`${showFilters ? 'block' : 'hidden'} lg:block`}>
-          {facets && <FilterSidebar facets={facets} filters={filters} onChange={update} onReset={reset} />}
+      <div className="min-w-0 lg:col-start-2 lg:row-start-1">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1.2fr_1fr]">
+          <div>
+            <label htmlFor="catalog-search" className="mb-1 block text-xs text-muted">
+              Search you want to read here
+            </label>
+            <div className="relative">
+              <input
+                id="catalog-search"
+                type="search"
+                className="input pr-10 [&::-webkit-search-cancel-button]:hidden"
+                placeholder="Search"
+                aria-label="Search the catalog"
+                value={term}
+                maxLength={100}
+                onChange={(e) => setTerm(e.target.value)}
+              />
+              <SearchIcon className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted" />
+            </div>
+          </div>
+          <FilterBarFields facets={facets} filters={filters} onChange={update} />
+          <div>
+            <label htmlFor="sort" className="mb-1 block text-xs text-muted">
+              Sort by
+            </label>
+            <div className="flex gap-2">
+              <select id="sort" className="input" value={sort} onChange={(e) => update({ sort: e.target.value })}>
+                {SORTS.map(([v, l]) => (
+                  <option key={v} value={v}>
+                    {l}
+                  </option>
+                ))}
+              </select>
+              <button type="button" className="btn-outline lg:hidden" aria-expanded={showFilters} onClick={() => setShowFilters((s) => !s)}>
+                Filters
+              </button>
+            </div>
+          </div>
         </div>
 
-        <section aria-live="polite" aria-busy={loading}>
+        <section aria-live="polite" aria-busy={loading} className="mt-8">
+          <h1 className="text-sm font-normal text-ink">Browse books</h1>
           {error && (
-            <p role="alert" className="rounded-lg bg-red-50 p-4 text-red-700">
+            <p role="alert" className="mt-3 border-l-4 border-danger bg-layer p-4 text-sm text-ink">
               {error}
             </p>
           )}
           {loading && !result && <Loader label="Loading books..." />}
           {result && (
             <>
-              <p className="mb-3 text-sm text-slate-600" data-testid="result-count">
+              <p className="mb-5 mt-1 text-xs text-muted" data-testid="result-count">
                 {result.total} {result.total === 1 ? 'book' : 'books'} found
                 {urlSearch && (
                   <>
@@ -158,7 +165,7 @@ export default function CatalogPage() {
                 )}
               </p>
               <div className={loading ? 'opacity-60 transition-opacity' : ''}>
-                <BookGrid books={result.items} columns="grid-cols-2 md:grid-cols-3 xl:grid-cols-4" emptyMessage="No books match your search or filters." />
+                <BookGrid books={result.items} columns="grid-cols-1 md:grid-cols-2 2xl:grid-cols-3" emptyMessage="No books match your search or filters." />
               </div>
               <Pagination page={result.page} totalPages={result.totalPages} onChange={(p) => { update({ page: String(p) }, false); window.scrollTo({ top: 0 }); }} />
             </>

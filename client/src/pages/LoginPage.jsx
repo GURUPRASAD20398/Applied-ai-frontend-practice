@@ -6,6 +6,7 @@ import { loginSchema } from '../utils/validators';
 import { useAuth } from '../context/AuthContext';
 import { parseError } from '../services/api';
 import FormField from '../components/common/FormField';
+import { ArrowRightIcon } from '../components/common/Icons';
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();
@@ -35,11 +36,11 @@ export default function LoginPage() {
   return (
     <div className="mx-auto max-w-md">
       <div className="card p-6 sm:p-8">
-        <h1 className="text-2xl font-bold text-secondary">Sign in</h1>
-        <p className="mt-1 text-sm text-slate-500">Welcome back! Sign in to continue.</p>
+        <h1 className="text-2xl font-light text-white">Sign in</h1>
+        <p className="mt-1 text-sm text-muted">Welcome back! Sign in to continue.</p>
 
         {serverError && (
-          <div role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <div role="alert" className="mt-4 border-l-4 border-danger bg-layer-2 px-3 py-2 text-sm text-ink">
             {serverError}
           </div>
         )}
@@ -67,17 +68,18 @@ export default function LoginPage() {
               {...register('password')}
             />
           </FormField>
-          <label className="flex items-center gap-2 text-sm text-slate-700">
+          <label className="flex items-center gap-2 text-sm text-ink">
             <input type="checkbox" className="h-4 w-4 accent-primary" {...register('remember')} />
             Remember me
           </label>
-          <button type="submit" className="btn-primary w-full py-2.5" disabled={isSubmitting}>
+          <button type="submit" className="btn-primary w-full justify-between py-3" disabled={isSubmitting}>
             {isSubmitting ? 'Signing in...' : 'Sign in'}
+            <ArrowRightIcon />
           </button>
         </form>
 
-        <div className="mt-6 rounded-lg bg-slate-50 p-3 text-xs text-slate-600">
-          <p className="font-semibold">Demo accounts</p>
+        <div className="mt-6 bg-layer-2 p-3 text-xs text-muted">
+          <p className="font-semibold text-ink">Demo accounts</p>
           <p>Customer: user@bookstore.com / User@1234</p>
           <p>Admin: admin@bookstore.com / Admin@123</p>
         </div>

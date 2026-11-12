@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SearchIcon } from './Icons';
 
 export default function SearchBar({ initial = '', className = '' }) {
   const [q, setQ] = useState(initial);
@@ -12,7 +13,7 @@ export default function SearchBar({ initial = '', className = '' }) {
   };
 
   return (
-    <form role="search" onSubmit={submit} className={`flex w-full ${className}`}>
+    <form role="search" onSubmit={submit} className={`relative flex w-full ${className}`}>
       <label htmlFor="site-search" className="sr-only">
         Search books, authors or ISBN
       </label>
@@ -22,11 +23,11 @@ export default function SearchBar({ initial = '', className = '' }) {
         value={q}
         maxLength={100}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Search books, authors, ISBN..."
-        className="w-full rounded-l-lg border-0 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-accent"
+        placeholder="Search"
+        className="input h-9 py-0 pr-10 [&::-webkit-search-cancel-button]:hidden"
       />
-      <button type="submit" className="rounded-r-lg bg-accent px-4 text-sm font-semibold text-slate-900 hover:bg-accent-dark hover:text-white" aria-label="Search">
-        Search
+      <button type="submit" className="absolute inset-y-0 right-0 grid w-10 place-items-center text-muted hover:text-white" aria-label="Search">
+        <SearchIcon />
       </button>
     </form>
   );

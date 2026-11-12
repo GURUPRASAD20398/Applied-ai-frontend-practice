@@ -10,6 +10,7 @@ import { useToast } from '../context/ToastContext';
 import { paymentSchema } from '../utils/validators';
 import { PAYMENT_LABELS, formatPrice } from '../utils/format';
 import FormField from '../components/common/FormField';
+import { CardIcon } from '../components/common/Icons';
 
 const BANKS = ['HDFC Bank', 'ICICI Bank', 'SBI', 'Axis Bank', 'Kotak Mahindra Bank'];
 const WALLETS = ['PayWallet', 'QuickPay', 'MobiCash'];
@@ -34,7 +35,7 @@ function PaymentForm({ method, onPay, paying, amount }) {
   const cls = (n) => `input ${errors[n] ? 'input-error' : ''}`;
 
   return (
-    <form onSubmit={handleSubmit(onPay)} noValidate className="mt-5 space-y-4">
+    <form onSubmit={handleSubmit(onPay)} noValidate className="space-y-4">
       {isCard && (
         <>
           <FormField label="Name on card" id="cardName" error={err('cardName')}>
@@ -51,7 +52,7 @@ function PaymentForm({ method, onPay, paying, amount }) {
               {...register('cardNumber', { onChange: (e) => setValue('cardNumber', formatCard(e.target.value)) })}
             />
           </FormField>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <FormField label="Expiry (MM/YY)" id="expiry" error={err('expiry')}>
               <input
                 id="expiry"
@@ -90,10 +91,13 @@ function PaymentForm({ method, onPay, paying, amount }) {
           </select>
         </FormField>
       )}
-      <button type="submit" className="btn-accent w-full py-3" disabled={paying}>
-        {paying ? 'Processing payment...' : `Pay ${formatPrice(amount)}`}
-      </button>
-      <p className="text-center text-xs text-slate-500">This is a simulated payment. No real money is charged.</p>
+      <div className="flex justify-end pt-2">
+        <button type="submit" className="btn-primary min-w-40 justify-between" disabled={paying}>
+          {paying ? 'Processing payment...' : `Pay ${formatPrice(amount)}`}
+          <CardIcon />
+        </button>
+      </div>
+      <p className="text-xs text-subtle">This is a simulated payment. No real money is charged.</p>
     </form>
   );
 }
@@ -132,16 +136,21 @@ export default function PaymentPage() {
   };
 
   return (
-    <div className="mx-auto max-w-xl">
-      <h1 className="text-2xl font-bold text-secondary">Payment</h1>
-      <div className="card mt-6 p-5">
-        <fieldset>
-          <legend className="text-sm font-bold text-secondary">Choose a payment method</legend>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup">
+    <section className="w-full max-w-2xl bg-layer text-ink" aria-labelledby="pay-h">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-5 py-4">
+        <h1 id="pay-h" className="text-base font-normal text-white">Complete Payment</h1>
+        <p className="text-sm font-semibold text-white">Payable Amount: {formatPrice(amountPreview)}</p>
+      </header>
+      <div className="grid sm:grid-cols-[170px_1fr]">
+        <fieldset className="border-b border-line sm:border-b-0 sm:border-r">
+          <legend className="sr-only">Choose a payment method</legend>
+          <div className="flex overflow-x-auto sm:block sm:overflow-visible" role="radiogroup">
             {METHODS.map((m) => (
               <label
                 key={m}
-                className={`cursor-pointer rounded-lg border-2 px-3 py-2 text-center text-sm font-medium ${method === m ? 'border-primary bg-primary-light/50 text-primary' : 'border-slate-200 text-slate-700 hover:border-slate-300'}`}
+                className={`block flex-1 cursor-pointer whitespace-nowrap px-4 py-4 text-sm transition-colors focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-white ${
+                  method === m ? 'bg-layer text-white shadow-[inset_3px_0_0_#0f62fe]' : 'bg-layer-2 text-muted hover:bg-layer-3'
+                }`}
               >
                 <input type="radio" name="method" value={m} checked={method === m} onChange={() => { setMethod(m); setError(''); }} className="sr-only" />
                 {PAYMENT_LABELS[m]}
@@ -150,10 +159,11 @@ export default function PaymentPage() {
           </div>
         </fieldset>
 
-        {error && <div role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
-
-        <PaymentForm key={method} method={method} onPay={onPay} paying={paying} amount={amountPreview} />
+        <div className="p-5">
+          {error && <div role="alert" className="mb-4 border-l-4 border-danger bg-layer-2 px-3 py-2 text-sm text-ink">{error}</div>}
+          <PaymentForm key={method} method={method} onPay={onPay} paying={paying} amount={amountPreview} />
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

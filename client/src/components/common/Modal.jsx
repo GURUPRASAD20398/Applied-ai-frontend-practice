@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { CloseIcon } from './Icons';
 
 export default function Modal({ open, title, onClose, children, footer }) {
   const ref = useRef(null);
@@ -17,23 +18,23 @@ export default function Modal({ open, title, onClose, children, footer }) {
 
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-40 flex items-end justify-center bg-slate-900/50 p-0 sm:items-center sm:p-4" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-4" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div
         ref={ref}
         role="dialog"
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className="max-h-[92vh] w-full overflow-y-auto rounded-t-2xl bg-white shadow-xl focus:outline-none sm:max-w-lg sm:rounded-2xl"
+        className="max-h-[92vh] w-full overflow-y-auto bg-layer text-ink focus:outline-none sm:max-w-lg"
       >
-        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-          <h2 className="text-lg font-bold text-secondary">{title}</h2>
-          <button type="button" onClick={onClose} aria-label="Close dialog" className="rounded p-1 text-2xl leading-none text-slate-500 hover:text-slate-900">
-            &times;
+        <div className="flex items-center justify-between border-b border-line px-5 py-4">
+          <h2 className="text-lg font-normal text-ink">{title}</h2>
+          <button type="button" onClick={onClose} aria-label="Close dialog" className="p-1 text-muted hover:text-white">
+            <CloseIcon width={20} height={20} />
           </button>
         </div>
         <div className="px-5 py-4">{children}</div>
-        {footer && <div className="flex justify-end gap-2 border-t border-slate-200 px-5 py-3">{footer}</div>}
+        {footer && <div className="flex justify-end gap-2 border-t border-line px-5 py-3">{footer}</div>}
       </div>
     </div>
   );

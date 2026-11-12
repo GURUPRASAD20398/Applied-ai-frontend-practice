@@ -18,7 +18,7 @@ export default function Pagination({ page, totalPages, onChange }) {
       </button>
       {range(page, totalPages).map((p) =>
         typeof p === 'string' ? (
-          <span key={p} className="px-1 text-slate-400" aria-hidden="true">
+          <span key={p} className="px-1 text-subtle" aria-hidden="true">
             &hellip;
           </span>
         ) : (
@@ -28,7 +28,7 @@ export default function Pagination({ page, totalPages, onChange }) {
             onClick={() => onChange(p)}
             aria-label={`Page ${p}`}
             aria-current={p === page ? 'page' : undefined}
-            className={`h-9 min-w-9 rounded-lg px-2 text-sm font-semibold ${p === page ? 'bg-primary text-white' : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'}`}
+            className={`h-10 min-w-10 px-2 text-sm ${p === page ? 'bg-primary text-white' : 'bg-layer text-ink hover:bg-layer-2'}`}
           >
             {p}
           </button>

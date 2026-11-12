@@ -1,9 +1,9 @@
 import { useToast } from '../../context/ToastContext';
 
 const STYLES = {
-  success: 'border-green-600 bg-green-50 text-green-900',
-  error: 'border-red-600 bg-red-50 text-red-900',
-  info: 'border-primary bg-primary-light text-slate-900',
+  success: 'border-success bg-layer text-ink',
+  error: 'border-danger bg-layer text-ink',
+  info: 'border-primary bg-layer text-ink',
 };
 
 export default function Toast() {
@@ -14,10 +14,10 @@ export default function Toast() {
         <div
           key={t.id}
           role={t.type === 'error' ? 'alert' : 'status'}
-          className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-lg border-l-4 px-4 py-3 text-sm shadow-lg ${STYLES[t.type]}`}
+          className={`pointer-events-auto flex w-full max-w-sm items-start gap-3 border-l-4 px-4 py-3 text-sm shadow-lg ${STYLES[t.type]}`}
         >
           <span className="flex-1">{t.message}</span>
-          <button type="button" onClick={() => dismiss(t.id)} aria-label="Dismiss notification" className="font-bold leading-none">
+          <button type="button" onClick={() => dismiss(t.id)} aria-label="Dismiss notification" className="font-bold leading-none text-muted hover:text-white">
             &times;
           </button>
         </div>

@@ -1,11 +1,11 @@
 import BookCard from './BookCard';
 
-export default function BookGrid({ books, columns = 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4', emptyMessage = 'No books found.' }) {
+export default function BookGrid({ books, columns = 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3', emptyMessage = 'No books found.' }) {
   if (!books.length) {
-    return <p className="rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">{emptyMessage}</p>;
+    return <p className="border border-dashed border-layer-3 bg-layer p-10 text-center text-muted">{emptyMessage}</p>;
   }
   return (
-    <div className={`grid gap-4 ${columns}`}>
+    <div className={`grid gap-x-8 gap-y-8 ${columns}`}>
       {books.map((b) => (
         <BookCard key={b.id} book={b} />
       ))}

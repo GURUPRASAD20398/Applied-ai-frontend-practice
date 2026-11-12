@@ -1,55 +1,125 @@
 @import 'tailwindcss';
 
+/*
+ * Book Worm visual theme (dark, IBM Carbon-style) taken from the UI screenshots.
+ * Token names from the previous theme are kept so existing class names keep working.
+ */
 @theme {
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
-  --color-primary-light: #dbeafe;
-  --color-secondary: #1e293b;
-  --color-accent: #f59e0b;
-  --color-accent-dark: #d97706;
-  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif;
+  --color-primary: #0f62fe;
+  --color-primary-dark: #0353e9;
+  --color-primary-light: #1c2f57;
+  --color-secondary: #f4f4f4; /* heading / ink colour */
+  --color-accent: #f1c21b; /* stars & highlights */
+  --color-accent-dark: #d2a106;
+
+  --color-canvas: #161616;
+  --color-layer: #262626;
+  --color-layer-2: #393939;
+  --color-layer-3: #4c4c4c;
+  --color-line: #393939;
+  --color-ink: #f4f4f4;
+  --color-muted: #c6c6c6;
+  --color-subtle: #8d8d8d;
+  --color-link: #78a9ff;
+  --color-danger: #fa4d56;
+  --color-success: #42be65;
+
+  /* Remap the neutral palette so any leftover slate-* utility renders correctly on the dark canvas. */
+  --color-slate-50: #262626;
+  --color-slate-100: #262626;
+  --color-slate-200: #393939;
+  --color-slate-300: #525252;
+  --color-slate-400: #8d8d8d;
+  --color-slate-500: #a8a8a8;
+  --color-slate-600: #c6c6c6;
+  --color-slate-700: #e0e0e0;
+  --color-slate-800: #f4f4f4;
+  --color-slate-900: #ffffff;
+
+  --font-sans: 'IBM Plex Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-serif: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+
+  /* The design uses square corners; keep a hairline radius where legacy markup still says rounded-*. */
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
+  --radius-3xl: 2px;
 }
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-800 antialiased;
+    @apply bg-canvas text-ink antialiased;
+    font-family: var(--font-sans);
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary;
+    @apply outline-2 outline-offset-2 outline-white;
   }
   img {
     @apply max-w-full;
   }
+  a {
+    @apply text-link;
+  }
+  select {
+    color-scheme: dark;
+  }
 }
 
 @layer components {
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  .btn,
+  .btn-primary,
+  .btn-accent,
+  .btn-outline,
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-normal transition-colors disabled:cursor-not-allowed disabled:opacity-50;
   }
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-primary text-white hover:bg-primary-dark;
-  }
+  .btn-primary,
   .btn-accent {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-accent text-slate-900 hover:bg-accent-dark hover:text-white;
+    @apply bg-primary text-white hover:bg-primary-dark;
   }
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 border border-slate-300 bg-white text-slate-700 hover:bg-slate-100;
+    @apply bg-layer-2 text-white hover:bg-layer-3;
   }
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-red-600 text-white hover:bg-red-700;
+    @apply bg-[#da1e28] text-white hover:bg-[#ba1b23];
+  }
+  a.btn-primary,
+  a.btn-accent,
+  a.btn-outline,
+  a.btn-danger {
+    @apply text-white;
   }
   .input {
-    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30;
+    @apply w-full border-0 border-b border-subtle bg-layer-2 px-4 py-2.5 text-sm text-ink placeholder:text-subtle focus:outline-2 focus:outline-offset-0 focus:outline-primary;
+  }
+  select.input {
+    @apply appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%23c6c6c6' stroke-width='1.5'%3E%3Cpath d='M3 6l5 5 5-5'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
   }
   .input-error {
-    @apply border-red-500 focus:border-red-500 focus:ring-red-500/30;
+    @apply border-danger focus:outline-danger;
   }
   .card {
-    @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+    @apply bg-layer;
   }
   .container-page {
-    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8;
+  }
+  .link {
+    @apply text-link underline hover:text-white;
+  }
+  .page-title {
+    @apply text-2xl font-normal text-ink;
+  }
+  .scene {
+    background-color: #123a63;
+    background-image: url('/bg-books.svg');
+    background-size: cover;
+    background-position: center;
   }
 }
 

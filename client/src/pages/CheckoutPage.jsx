@@ -7,6 +7,8 @@ import AddressCard from '../components/checkout/AddressCard';
 import AddressForm from '../components/checkout/AddressForm';
 import Modal from '../components/common/Modal';
 import Loader from '../components/common/Loader';
+import Breadcrumbs from '../components/common/Breadcrumbs';
+import { ArrowRightIcon } from '../components/common/Icons';
 import { OrderSummary } from './CartPage';
 import { formatPrice } from '../utils/format';
 
@@ -109,16 +111,17 @@ export default function CheckoutPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-secondary">Checkout</h1>
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
+      <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Cart', to: '/cart' }, { label: 'Checkout' }]} />
+      <h1 className="text-xl font-normal text-white">Checkout</h1>
+      <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_minmax(320px,440px)]">
         <div className="space-y-6">
           <section className="card p-5" aria-labelledby="addr-h">
             <div className="mb-4 flex items-center justify-between">
-              <h2 id="addr-h" className="text-lg font-bold text-secondary">1. Delivery address</h2>
+              <h2 id="addr-h" className="text-base font-normal text-white">1. Delivery address</h2>
               <button type="button" className="btn-outline" onClick={() => { setFormErrors({}); setEditing('new'); }}>+ Add address</button>
             </div>
             {addresses.length === 0 ? (
-              <p className="text-sm text-slate-600">You have no saved addresses. Add one to continue.</p>
+              <p className="text-sm text-muted">You have no saved addresses. Add one to continue.</p>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-labelledby="addr-h">
                 {addresses.map((a) => (
@@ -137,8 +140,8 @@ export default function CheckoutPage() {
           </section>
 
           <section className="card p-5" aria-labelledby="pts-h">
-            <h2 id="pts-h" className="text-lg font-bold text-secondary">2. Reward points</h2>
-            <p className="mt-1 text-sm text-slate-600">
+            <h2 id="pts-h" className="text-base font-normal text-white">2. Reward points</h2>
+            <p className="mt-1 text-sm text-muted">
               Balance: <strong data-testid="points-balance">{preview.pointsBalance}</strong> points (1 point = {formatPrice(1)}).
               You will earn <strong>{preview.pointsToEarn}</strong> points on this order.
             </p>
@@ -152,30 +155,33 @@ export default function CheckoutPage() {
                 <button type="button" className="btn-outline" onClick={() => { setPoints(''); refreshPreview(0); }}>Remove</button>
               )}
             </div>
-            {pointsError && <p id="points-error" role="alert" className="mt-2 text-sm font-medium text-red-600">{pointsError}</p>}
+            {pointsError && <p id="points-error" role="alert" className="mt-2 text-sm text-danger">{pointsError}</p>}
             {preview.pointsRedeemed > 0 && !pointsError && (
-              <p role="status" className="mt-2 text-sm font-medium text-green-700">{preview.pointsRedeemed} points applied. You save {formatPrice(preview.discount)}.</p>
+              <p role="status" className="mt-2 text-sm text-success">{preview.pointsRedeemed} points applied. You save {formatPrice(preview.discount)}.</p>
             )}
           </section>
 
           <section className="card p-5" aria-labelledby="rev-h">
-            <h2 id="rev-h" className="text-lg font-bold text-secondary">3. Review items</h2>
-            <ul className="mt-3 divide-y divide-slate-100">
+            <h2 id="rev-h" className="text-base font-normal text-white">3. Review items</h2>
+            <ul className="mt-3 divide-y divide-layer-2">
               {preview.items.map((i) => (
-                <li key={i.bookId} className="flex items-center gap-3 py-2 text-sm">
-                  <img src={i.image} alt="" className="h-14 w-10 rounded object-cover" />
-                  <span className="flex-1">{i.title}</span>
-                  <span className="text-slate-500">&times; {i.quantity}</span>
-                  <span className="font-semibold">{formatPrice(i.price * i.quantity)}</span>
+                <li key={i.bookId} className="flex items-center gap-3 py-3 text-sm">
+                  <img src={i.image} alt="" className="h-16 w-11 object-cover" />
+                  <span className="flex-1 text-ink">{i.title}</span>
+                  <span className="text-muted">&times; {i.quantity}</span>
+                  <span className="font-semibold text-white">{formatPrice(i.price * i.quantity)}</span>
                 </li>
               ))}
             </ul>
-            <Link to="/cart" className="mt-2 inline-block text-sm font-semibold text-primary hover:underline">Edit cart</Link>
+            <Link to="/cart" className="mt-2 inline-block text-sm text-link hover:underline">Edit cart</Link>
           </section>
         </div>
 
         <OrderSummary summary={preview}>
-          <button type="button" className="btn-accent mt-4 w-full py-3" onClick={proceed}>Continue to payment</button>
+          <button type="button" className="btn-primary mt-5 w-full justify-between" onClick={proceed}>
+            Continue to payment
+            <ArrowRightIcon />
+          </button>
         </OrderSummary>
       </div>
 
@@ -203,7 +209,7 @@ export default function CheckoutPage() {
           </>
         }
       >
-        <p className="text-sm text-slate-600">This will permanently remove the address for {deleting?.fullName}.</p>
+        <p className="text-sm text-muted">This will permanently remove the address for {deleting?.fullName}.</p>
       </Modal>
     </div>
   );

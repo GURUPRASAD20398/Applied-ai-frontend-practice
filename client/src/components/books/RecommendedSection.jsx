@@ -20,10 +20,10 @@ export default function RecommendedSection({ title = 'Recommended for you', limi
   if (!books.length) return null;
   return (
     <section aria-labelledby="rec-heading" className="mt-10">
-      <h2 id="rec-heading" className="mb-4 text-xl font-bold text-secondary">
+      <h2 id="rec-heading" className="mb-4 text-lg font-normal text-ink">
         {title}
       </h2>
-      <div className={`grid gap-3 ${columns}`}>
+      <div className={`grid gap-x-8 gap-y-6 ${columns}`}>
         {books.map((b) => (
           <RecommendationCard key={b.id} book={b} />
         ))}

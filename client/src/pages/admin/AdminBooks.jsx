@@ -98,7 +98,7 @@ export default function AdminBooks() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-secondary">Book management</h1>
+        <h1 className="text-2xl font-normal text-white">Book management</h1>
         <div className="flex gap-2">
           <Link to="/admin" className="btn-outline">Dashboard</Link>
           <button type="button" className="btn-primary" onClick={() => { setServerErrors({}); setEditing('new'); }}>+ Add book</button>
@@ -108,7 +108,7 @@ export default function AdminBooks() {
       <div className="card mt-6 overflow-x-auto">
         <table className="w-full text-left text-sm">
           <caption className="sr-only">All books</caption>
-          <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+          <thead className="bg-layer-2 text-xs uppercase text-muted">
             <tr>
               <th scope="col" className="px-4 py-3">Title</th>
               <th scope="col" className="px-4 py-3">Author</th>
@@ -118,17 +118,17 @@ export default function AdminBooks() {
               <th scope="col" className="px-4 py-3"><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-layer-2">
             {books.map((b) => (
               <tr key={b.id}>
-                <td className="px-4 py-3 font-medium text-secondary">{b.title}</td>
+                <td className="px-4 py-3 font-medium text-white">{b.title}</td>
                 <td className="px-4 py-3">{b.author}</td>
                 <td className="px-4 py-3">{b.category}</td>
                 <td className="px-4 py-3">{formatPrice(b.price)}</td>
                 <td className="px-4 py-3">{b.stock}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right">
-                  <button type="button" className="mr-3 font-semibold text-primary hover:underline" onClick={() => { setServerErrors({}); setEditing(b); }} aria-label={`Edit ${b.title}`}>Edit</button>
-                  <button type="button" className="font-semibold text-red-600 hover:underline" onClick={() => setDeleting(b)} aria-label={`Delete ${b.title}`}>Delete</button>
+                  <button type="button" className="mr-3 font-semibold text-link hover:underline" onClick={() => { setServerErrors({}); setEditing(b); }} aria-label={`Edit ${b.title}`}>Edit</button>
+                  <button type="button" className="font-semibold text-danger hover:underline" onClick={() => setDeleting(b)} aria-label={`Delete ${b.title}`}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -161,7 +161,7 @@ export default function AdminBooks() {
           </>
         }
       >
-        <p className="text-sm text-slate-600">&ldquo;{deleting?.title}&rdquo; will be permanently removed from the catalog.</p>
+        <p className="text-sm text-muted">&ldquo;{deleting?.title}&rdquo; will be permanently removed from the catalog.</p>
       </Modal>
     </div>
   );

@@ -9,8 +9,9 @@ import { useToast } from '../context/ToastContext';
 import { formatLongDate, formatPrice } from '../utils/format';
 import StarRating from '../components/common/StarRating';
 import Loader from '../components/common/Loader';
-import BookGrid from '../components/books/BookGrid';
+import Breadcrumbs from '../components/common/Breadcrumbs';
 import RecommendationCard from '../components/books/RecommendationCard';
+import { BookmarkIcon, CartIcon } from '../components/common/Icons';
 
 export default function BookDetailsPage() {
   const { id } = useParams();
@@ -40,7 +41,7 @@ export default function BookDetailsPage() {
   if (error) {
     return (
       <div className="py-16 text-center">
-        <p role="alert" className="text-lg text-slate-700">{error}</p>
+        <p role="alert" className="text-lg text-ink">{error}</p>
         <Link to="/books" className="btn-primary mt-4">Back to catalog</Link>
       </div>
     );
@@ -86,79 +87,105 @@ export default function BookDetailsPage() {
 
   return (
     <div>
-      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-slate-500">
-        <Link to="/" className="hover:text-primary">Home</Link> / <Link to="/books" className="hover:text-primary">Books</Link> /{' '}
-        <Link to={`/books?category=${encodeURIComponent(book.category)}`} className="hover:text-primary">{book.category}</Link>
-      </nav>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', to: '/' },
+          { label: 'Books', to: '/books' },
+          { label: book.category, to: `/books?category=${encodeURIComponent(book.category)}` },
+        ]}
+      />
 
-      <div className="grid gap-8 md:grid-cols-[320px_1fr]">
-        <div>
-          <img src={book.image} alt={`Cover of ${book.title}`} className="mx-auto w-full max-w-xs rounded-xl shadow-lg" />
-        </div>
+      <div className="grid gap-8 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px]">
+        <div className="min-w-0">
+          <div className="grid gap-6 md:grid-cols-[minmax(220px,300px)_1fr]">
+            <div>
+              <img src={book.image} alt={`Cover of ${book.title}`} className="mx-auto aspect-[2/3] w-full max-w-xs bg-layer object-cover md:max-w-none" />
+            </div>
 
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-secondary">{book.title}</h1>
-          <p className="mt-1 text-slate-600">
-            by <Link to={`/books?author=${encodeURIComponent(book.author)}`} className="font-semibold text-primary hover:underline">{book.author}</Link>
-          </p>
-          <div className="mt-2"><StarRating value={book.rating} count={book.reviewCount} /> <span className="text-sm text-slate-500">ratings</span></div>
+            <div className="min-w-0 text-xs text-muted">
+              <h1 className="text-2xl font-normal text-white">{book.title}</h1>
+              <p className="mt-2">
+                by <Link to={`/books?author=${encodeURIComponent(book.author)}`} className="text-link underline">{book.author}</Link>
+              </p>
+              <p className="mt-2">{book.description}</p>
+              {book.publisher && <p className="mt-5">Published by: <span className="text-link underline">{book.publisher}</span></p>}
+              <p className="mt-5">
+                <Link to={`/books?category=${encodeURIComponent(book.category)}`} className="text-link underline">{book.category}</Link>
+              </p>
 
-          <p className="mt-4 text-3xl font-bold text-secondary">{formatPrice(book.price)}</p>
-          <p className={`mt-1 text-sm font-semibold ${inStock ? 'text-green-700' : 'text-red-600'}`}>
-            {inStock ? (book.stock <= 5 ? `Only ${book.stock} left in stock` : 'In stock') : 'Currently unavailable'}
-          </p>
-          {inStock && <p className="text-sm text-slate-600">Delivery by <strong>{formatLongDate(book.expectedDelivery)}</strong></p>}
+              <p className="mt-6 text-3xl font-semibold text-white">{formatPrice(book.price)}</p>
+              <p className={`mt-1 ${inStock ? 'text-muted' : 'text-danger'}`}>
+                {inStock ? (book.stock <= 5 ? `Only ${book.stock} left in stock` : 'In stock') : 'Currently unavailable'}
+              </p>
+              {inStock && <p className="text-muted">Delivery by <strong className="font-semibold text-ink">{formatLongDate(book.expectedDelivery)}</strong></p>}
 
-          <div className="mt-5 flex flex-wrap gap-3">
-            <button type="button" className="btn-primary px-6 py-3" onClick={addToCart} disabled={!inStock || busy}>Add to cart</button>
-            <button type="button" className="btn-accent px-6 py-3" onClick={buyNow} disabled={!inStock || busy}>Buy now</button>
-            <button type="button" className="btn-outline px-6 py-3" onClick={toggleWishlist} disabled={busy} aria-pressed={wished}>
-              {wished ? '♥ In wishlist' : '♡ Add to wishlist'}
-            </button>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <button type="button" className="btn-primary min-w-40 justify-between" onClick={addToCart} disabled={!inStock || busy}>
+                  Add to cart
+                  <CartIcon width={16} height={16} />
+                </button>
+                <button type="button" className="btn-outline min-w-44 justify-between" onClick={toggleWishlist} disabled={busy} aria-pressed={wished}>
+                  {wished ? 'In wishlist' : 'Add to wishlist'}
+                  <BookmarkIcon className={wished ? 'fill-current' : ''} />
+                </button>
+                <button type="button" className="btn-outline" onClick={buyNow} disabled={!inStock || busy}>Buy now</button>
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-x-10 gap-y-3">
+                <div>
+                  <p className="text-subtle">Rating</p>
+                  <p className="mt-1"><StarRating value={book.rating} count={book.reviewCount} /> <span className="text-subtle">ratings</span></p>
+                </div>
+                <div>
+                  <p className="text-subtle">Delivery time</p>
+                  <p className="mt-1 text-ink">{book.deliveryDays} days</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <section aria-labelledby="desc-h" className="mt-8">
-            <h2 id="desc-h" className="text-lg font-bold text-secondary">About this book</h2>
-            <p className="mt-2 leading-relaxed text-slate-700">{book.description}</p>
+            <h2 id="desc-h" className="text-base font-normal text-white">About this book</h2>
+            <p className="mt-2 text-xs leading-relaxed text-muted">{book.description}</p>
+            <dl className="mt-4 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+              {[
+                ['Publisher', book.publisher],
+                ['ISBN', book.isbn],
+                ['Category', book.category],
+                ['Published', book.publishedDate],
+                ['Reviews', book.reviewCount.toLocaleString('en-IN')],
+              ].map(([k, v]) => (
+                <div key={k} className="flex justify-between border-b border-line py-2 text-xs">
+                  <dt className="text-subtle">{k}</dt>
+                  <dd className="text-ink">{v}</dd>
+                </div>
+              ))}
+            </dl>
           </section>
 
-          <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
-            {[
-              ['Publisher', book.publisher],
-              ['ISBN', book.isbn],
-              ['Category', book.category],
-              ['Published', book.publishedDate],
-              ['Reviews', book.reviewCount.toLocaleString('en-IN')],
-              ['Delivery time', `${book.deliveryDays} days`],
-            ].map(([k, v]) => (
-              <div key={k} className="flex justify-between border-b border-slate-200 py-1.5">
-                <dt className="text-slate-500">{k}</dt>
-                <dd className="font-medium text-slate-800">{v}</dd>
+          {fbt.length > 0 && (
+            <section aria-labelledby="fbt-h" className="mt-10 bg-layer p-5">
+              <h2 id="fbt-h" className="text-base font-normal text-white">Frequently bought together</h2>
+              <div className="mt-4 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {bundle.map((b) => <RecommendationCard key={b.id} book={b} />)}
               </div>
-            ))}
-          </dl>
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-xs text-muted">Total for {bundle.length} books: <strong className="text-white">{formatPrice(bundleTotal)}</strong></p>
+                <button type="button" className="btn-primary" onClick={addBundle} disabled={busy}>Add all to cart</button>
+              </div>
+            </section>
+          )}
         </div>
+
+        {related.length > 0 && (
+          <aside aria-labelledby="rel-h" className="lg:border-l lg:border-line lg:pl-6">
+            <h2 id="rel-h" className="mb-4 text-base font-normal text-white">Related Reads</h2>
+            <div className="space-y-6">
+              {related.map((b) => <RecommendationCard key={b.id} book={b} />)}
+            </div>
+          </aside>
+        )}
       </div>
-
-      {fbt.length > 0 && (
-        <section aria-labelledby="fbt-h" className="card mt-10 p-5">
-          <h2 id="fbt-h" className="text-xl font-bold text-secondary">Frequently bought together</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {bundle.map((b) => <RecommendationCard key={b.id} book={b} />)}
-          </div>
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-slate-600">Total for {bundle.length} books: <strong className="text-secondary">{formatPrice(bundleTotal)}</strong></p>
-            <button type="button" className="btn-primary" onClick={addBundle} disabled={busy}>Add all to cart</button>
-          </div>
-        </section>
-      )}
-
-      {related.length > 0 && (
-        <section aria-labelledby="rel-h" className="mt-10">
-          <h2 id="rel-h" className="mb-4 text-xl font-bold text-secondary">Related books</h2>
-          <BookGrid books={related} columns="grid-cols-2 sm:grid-cols-3 lg:grid-cols-6" />
-        </section>
-      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import OrderCard from '../components/orders/OrderCard';
 import Loader from '../components/common/Loader';
+import Breadcrumbs from '../components/common/Breadcrumbs';
 
 export default function OrderHistoryPage() {
   const [orders, setOrders] = useState(null);
@@ -37,19 +38,20 @@ export default function OrderHistoryPage() {
     }
   };
 
-  if (error) return <p role="alert" className="py-10 text-center text-red-700">{error}</p>;
+  if (error) return <p role="alert" className="py-10 text-center text-danger">{error}</p>;
   if (!orders) return <Loader label="Loading your orders..." />;
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-secondary">Order history</h1>
+      <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'My Orders' }]} />
+      <h1 className="text-xl font-normal text-white">Order history</h1>
       {orders.length === 0 ? (
-        <div className="card mt-6 p-10 text-center">
-          <p className="text-lg text-slate-600">You haven&apos;t placed any orders yet.</p>
+        <div className="mt-4 bg-layer p-10 text-center">
+          <p className="text-lg text-muted">You haven&apos;t placed any orders yet.</p>
           <Link to="/books" className="btn-primary mt-4">Start shopping</Link>
         </div>
       ) : (
-        <div className="mt-6 space-y-4">
+        <div className="mt-4 space-y-4">
           {orders.map((o) => (
             <OrderCard key={o.id} order={o} onBuyAgain={buyAgain} busy={busyId === o.id} />
           ))}

@@ -10,11 +10,11 @@ function Section({ id, title, to, children }) {
   return (
     <section aria-labelledby={id} className="mt-10">
       <div className="mb-4 flex items-end justify-between">
-        <h2 id={id} className="text-xl font-bold text-secondary sm:text-2xl">
+        <h2 id={id} className="text-base font-normal text-ink">
           {title}
         </h2>
         {to && (
-          <Link to={to} className="text-sm font-semibold text-primary hover:underline">
+          <Link to={to} className="text-xs text-link hover:underline">
             View all
           </Link>
         )}
@@ -24,7 +24,7 @@ function Section({ id, title, to, children }) {
   );
 }
 
-const COLS = 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6';
+const COLS = 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3';
 
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
@@ -50,53 +50,71 @@ export default function HomePage() {
   }, [isAuthenticated]);
 
   return (
-    <div>
-      <section className="overflow-hidden rounded-2xl bg-gradient-to-r from-secondary to-primary px-6 py-10 text-white sm:px-12 sm:py-16" aria-labelledby="hero-title">
-        <p className="text-sm font-semibold uppercase tracking-widest text-accent">New season, new stories</p>
-        <h1 id="hero-title" className="mt-2 max-w-2xl font-serif text-3xl font-bold leading-tight sm:text-5xl">
-          Find your next great read
-        </h1>
-        <p className="mt-3 max-w-xl text-slate-200">Thousands of stories, ideas and adventures delivered to your door. Earn reward points on every order.</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link to="/books" className="btn-accent px-6 py-3">
-            Browse books
-          </Link>
-          <Link to="/books?sort=newest" className="btn rounded-lg border border-white/60 px-6 py-3 text-white hover:bg-white/10">
-            New arrivals
-          </Link>
-        </div>
-      </section>
+    <div className="grid gap-6 lg:grid-cols-[190px_1fr] lg:gap-8">
+      <div className="hidden lg:block">
+        {data && (
+          <nav aria-label="Categories">
+            <Link to="/books" className="block bg-layer-2 px-4 py-2 text-xs text-white shadow-[inset_3px_0_0_#0f62fe]">
+              All
+            </Link>
+            {data.cats.map((c) => (
+              <CategoryCard key={c.id} category={c} />
+            ))}
+          </nav>
+        )}
+      </div>
 
-      {error && (
-        <p role="alert" className="mt-6 rounded-lg bg-red-50 p-4 text-red-700">
-          {error}
-        </p>
-      )}
-      {!data && !error && <Loader label="Loading the store..." />}
+      <div className="min-w-0">
+        <section className="bg-layer px-6 py-8 sm:px-10 sm:py-12" aria-labelledby="hero-title">
+          <p className="text-xs uppercase tracking-widest text-subtle">New season, new stories</p>
+          <h1 id="hero-title" className="mt-2 max-w-2xl text-3xl font-light leading-tight text-white sm:text-4xl">
+            Find your next great read
+          </h1>
+          <p className="mt-3 max-w-xl text-sm text-muted">Thousands of stories, ideas and adventures delivered to your door. Earn reward points on every order.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link to="/books" className="btn-primary px-6 py-3">
+              Browse books
+            </Link>
+            <Link to="/books?sort=newest" className="btn-outline px-6 py-3">
+              New arrivals
+            </Link>
+          </div>
+        </section>
 
-      {data && (
-        <>
-          <Section id="cat-h" title="Shop by category">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {data.cats.map((c) => (
-                <CategoryCard key={c.id} category={c} />
-              ))}
-            </div>
-          </Section>
-          <Section id="feat-h" title="Featured books" to="/books">
-            <BookGrid books={data.featured} columns={COLS} />
-          </Section>
-          <Section id="best-h" title="Best sellers" to="/books?sort=rating">
-            <BookGrid books={data.best} columns={COLS} />
-          </Section>
-          <Section id="new-h" title="New arrivals" to="/books?sort=newest">
-            <BookGrid books={data.fresh} columns={COLS} />
-          </Section>
-          <Section id="rec-h" title={data.rec.basedOn === 'history' ? 'Recommended for you' : 'Popular right now'}>
-            <BookGrid books={data.rec.items.slice(0, 6)} columns={COLS} />
-          </Section>
-        </>
-      )}
+        {error && (
+          <p role="alert" className="mt-6 border-l-4 border-danger bg-layer p-4 text-sm text-ink">
+            {error}
+          </p>
+        )}
+        {!data && !error && <Loader label="Loading the store..." />}
+
+        {data && (
+          <>
+            <Section id="cat-h" title="Shop by category">
+              <div className="grid grid-cols-2 gap-px bg-line sm:grid-cols-3 lg:hidden">
+                {data.cats.map((c) => (
+                  <div key={c.id} className="bg-canvas">
+                    <CategoryCard category={c} />
+                  </div>
+                ))}
+              </div>
+              <p className="hidden text-xs text-muted lg:block">Pick a category from the list on the left to start browsing.</p>
+            </Section>
+            <Section id="rec-h" title={data.rec.basedOn === 'history' ? 'Recommended for You' : 'Popular right now'}>
+              <BookGrid books={data.rec.items.slice(0, 6)} columns={COLS} />
+            </Section>
+            <Section id="best-h" title="Bestsellers this Month" to="/books?sort=rating">
+              <BookGrid books={data.best} columns={COLS} />
+            </Section>
+            <Section id="new-h" title="New Launches" to="/books?sort=newest">
+              <BookGrid books={data.fresh} columns={COLS} />
+            </Section>
+            <Section id="feat-h" title="Featured books" to="/books">
+              <BookGrid books={data.featured} columns={COLS} />
+            </Section>
+          </>
+        )}
+      </div>
     </div>
   );
 }

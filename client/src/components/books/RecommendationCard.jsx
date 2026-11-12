@@ -1,17 +1,24 @@
 import { Link } from 'react-router-dom';
-import { formatPrice } from '../../utils/format';
+import { formatPrice, formatShortDate } from '../../utils/format';
 import StarRating from '../common/StarRating';
 
-/** Compact horizontal card used in recommendation strips and "frequently bought together". */
+/** Compact horizontal card used in "Related Reads", recommendation strips and "frequently bought together". */
 export default function RecommendationCard({ book }) {
   return (
-    <Link to={`/books/${book.id}`} className="card flex gap-3 p-3 transition-shadow hover:shadow-md">
-      <img src={book.image} alt={`Cover of ${book.title}`} loading="lazy" className="h-24 w-16 shrink-0 rounded object-cover" />
+    <Link to={`/books/${book.id}`} className="flex gap-4 text-xs text-muted hover:bg-layer/60">
+      <img src={book.image} alt={`Cover of ${book.title}`} loading="lazy" className="aspect-[2/3] w-24 shrink-0 bg-layer object-cover sm:w-28" />
       <div className="min-w-0">
-        <h3 className="line-clamp-2 text-sm font-semibold text-secondary">{book.title}</h3>
-        <p className="truncate text-xs text-slate-500">{book.author}</p>
-        <StarRating value={book.rating} />
-        <p className="mt-1 text-sm font-bold text-secondary">{formatPrice(book.price)}</p>
+        <h3 className="line-clamp-2 text-base font-normal leading-snug text-ink">{book.title}</h3>
+        <p className="mt-2 truncate">
+          by <span className="text-link underline">{book.author}</span>
+        </p>
+        {book.description && <p className="mt-2 line-clamp-2">{book.description}</p>}
+        <div className="mt-2">
+          <StarRating value={book.rating} />
+        </div>
+        {book.category && <p className="mt-2 text-link underline">{book.category}</p>}
+        <p className="mt-2 text-xl font-semibold text-white">{formatPrice(book.price)}</p>
+        {book.expectedDelivery && <p>Delivery by {formatShortDate(book.expectedDelivery)}</p>}
       </div>
     </Link>
   );

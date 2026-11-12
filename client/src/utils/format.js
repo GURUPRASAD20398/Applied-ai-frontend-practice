@@ -8,6 +8,10 @@ export const formatDate = (iso) =>
 export const formatLongDate = (iso) =>
   iso ? new Date(iso).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
 
+/** "Mon, 21 Jul" - the compact delivery date used on cards. */
+export const formatShortDate = (iso) =>
+  iso ? new Date(iso).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }) : '';
+
 export const PAYMENT_LABELS = {
   credit_card: 'Credit Card',
   debit_card: 'Debit Card',
